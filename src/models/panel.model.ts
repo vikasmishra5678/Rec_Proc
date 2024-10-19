@@ -1,32 +1,29 @@
-import {Entity, model, property, hasMany} from '@loopback/repository';
-import {PanelAvailability} from './panel-availability.model';
+import {belongsTo, Entity, hasMany, model, property} from '@loopback/repository';
+import {PanelSlots} from './panel-slots.model';
+import {User} from './user.model';
 
-@model({settings: {strict: false}})
+@model()
 export class Panel extends Entity {
+
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
   })
-  P_ID?: number;
+  id?: string;
+
+  @property({
+    type: 'array',
+    itemType: 'string',
+    required: true,
+  })
+  stages_category: string[];
 
   @property({
     type: 'string',
     required: true,
   })
-  panel_name: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  panel_category: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  exp_category: string;
+  experience_category: string;
 
   @property({
     type: 'array',
@@ -35,15 +32,20 @@ export class Panel extends Entity {
   })
   domain: string[];
 
-  @hasMany(() => PanelAvailability, {keyTo: 'P_ID'})
-  panelAvailabilities: PanelAvailability[];
-  // Define well-known properties here
+  @hasMany(() => PanelSlots)
+  panelSlots: PanelSlots[];
 
-  // Indexer property to allow additional data
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  @belongsTo(() => User)
+  userId: string;
+
+  constructor(data?: Partial<Panel>) {
+    super(data);
+  }
 }
 
 export interface PanelRelations {
-  // describe navigational properties here
+  panelSlots?: PanelSlots[];
+  user?: User;
 }
+
+export type PanelWithRelations = Panel & PanelRelations;

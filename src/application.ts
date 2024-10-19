@@ -12,6 +12,7 @@ import {ServiceMixin} from '@loopback/service-proxy';
 import path from 'path';
 import {JWTAuthenticationStrategy} from './authentication-strategies/jwt-strategy';
 import {PasswordHasherBindings, TokenServiceBindings, TokenServiceConstants, UserServiceBindings} from './keys';
+import {CandidateRepository, CandidateStatusRepository, PanelRepository, PanelSlotsRepository, UserCredentialsRepository, UserRepository} from './repositories';
 import {MySequence} from './sequence';
 import {BcryptHasher, JWTService, MyUserService} from './services';
 import {SECURITY_SCHEME_SPEC, SECURITY_SPEC} from './utils/security-spec';
@@ -47,6 +48,13 @@ export class LbRrApplication extends BootMixin(
         nested: true,
       },
     };
+
+    this.repository(UserRepository);
+    this.repository(PanelRepository);
+    this.repository(PanelSlotsRepository);
+    this.repository(UserCredentialsRepository);
+    this.repository(CandidateRepository);
+    this.repository(CandidateStatusRepository);
 
     this.component(AuthenticationComponent);
 

@@ -1,89 +1,73 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {belongsTo, Entity, model, property} from '@loopback/repository';
+import {Candidate} from './candidate.model';
 
 @model()
 export class CandidateStatus extends Entity {
-
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
   })
-  CS_ID?: number;
+  id?: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  C_Status: string;
+  candidate_status: string;
 
   @property({
     type: 'string',
+    required: true,
   })
-  C_Stage?: string;
+  current_stage: string;
 
   @property({
     type: 'string',
+    required: true,
   })
-  C_L1_Status?: string;
-
-  @property({
-    type: 'date',
-  })
-  C_L1_Date?: string;
+  l1_panel: string;
 
   @property({
     type: 'string',
+    required: true,
   })
-  C_L1_Panel?: string;
+  l1_date: string;
 
   @property({
     type: 'string',
+    required: true,
   })
-  C_L2_Status?: string;
-
-  @property({
-    type: 'date',
-  })
-  C_L2_Date?: string;
+  l1_status: string;
 
   @property({
     type: 'string',
+    required: true,
   })
-  C_L2_Panel?: string;
+  l2_panel: string;
 
   @property({
     type: 'string',
+    required: true,
   })
-  C_L3_Status?: string;
-
-  @property({
-    type: 'date',
-  })
-  C_L3_Date?: string;
+  l2_date: string;
 
   @property({
     type: 'string',
+    required: true,
   })
-  C_L3_Panel?: string;
+  l2_status: string;
 
-  @property({
-    type: 'string',
-  })
-  C_HR_Status?: string;
+  @belongsTo(() => Candidate)
+  candidateId: string;
 
-  @property({
-    type: 'date',
-  })
-  C_HR_Date?: string;
-
-  @property({
-    type: 'string',
-  })
-  C_HR_Panel?: string;
-
+  constructor(data?: Partial<CandidateStatus>) {
+    super(data);
+  }
 }
 
 export interface CandidateStatusRelations {
-  // describe navigational properties here
+  candidate?: Candidate;
 }
 
+export type CandidateStatusWithRelations = CandidateStatus & CandidateStatusRelations;

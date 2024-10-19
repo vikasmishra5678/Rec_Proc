@@ -7,7 +7,7 @@ import {SecurityBindings, UserProfile, securityId} from '@loopback/security';
 import {User} from '../models';
 import {Credentials, UserRepository} from '../repositories';
 import {PasswordHasher, validateCredentials} from '../services';
-import {CredentialsRequestBody, UserProfileSchema} from './specs/user-controller.specs';
+import {CredentialsRequestBody, CredentialsRequestBodyAdmin, CredentialsRequestBodyLogin, UserProfileSchema} from './specs/user-controller.specs';
 
 import _ from 'lodash';
 import {PasswordHasherBindings, TokenServiceBindings, UserServiceBindings} from '../keys';
@@ -48,14 +48,17 @@ export class UserController {
       },
     },
   })
+  @authenticate('jwt')
+  @authorize({
+    allowedRoles: ['admin'],
+    voters: [basicAuthorization],
+  })
   async create(
     @requestBody(CredentialsRequestBody)
     newUserRequest: Credentials,
   ): Promise<User> {
-    newUserRequest.role = 'user';
-
     // ensure a valid email value and password value
-    validateCredentials(_.pick(newUserRequest, ['email', 'password']));
+    validateCredentials(_.pick(newUserRequest, ['email', 'password', 'role']));
 
     // encrypt the password
     const password = await this.passwordHasher.hashPassword(
@@ -99,13 +102,13 @@ export class UserController {
     },
   })
   async createAdmin(
-    @requestBody(CredentialsRequestBody)
+    @requestBody(CredentialsRequestBodyAdmin)
     newUserRequest: Credentials,
   ): Promise<User> {
     // All new users have the "customer" role by default
     newUserRequest.role = 'admin';
     // ensure a valid email value and password value
-    validateCredentials(_.pick(newUserRequest, ['email', 'password']));
+    validateCredentials(_.pick(newUserRequest, ['email', 'password', 'role']));
 
     // encrypt the password
     const password = await this.passwordHasher.hashPassword(
@@ -126,7 +129,7 @@ export class UserController {
       return savedUser;
     } catch (error) {
       // MongoError 11000 duplicate key
-      if (error.code === 11000 && error.errmsg.includes('index: uniqueEmail')) {
+      if (error.code === 11000 && error.keyPattern && error.keyPattern.email) {
         throw new HttpErrors.Conflict('Email value is already taken');
       } else {
         throw error;
@@ -200,7 +203,7 @@ export class UserController {
     },
   })
   async login(
-    @requestBody(CredentialsRequestBody) credentials: Credentials,
+    @requestBody(CredentialsRequestBodyLogin) credentials: Credentials,
   ): Promise<{token: string}> {
     // ensure the user exists, and the password is correct
     const user = await this.userService.verifyCredentials(credentials);

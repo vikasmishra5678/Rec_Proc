@@ -1,4 +1,5 @@
-import {Entity, model, property, hasOne} from '@loopback/repository';
+import {Entity, hasOne, model, property} from '@loopback/repository';
+import {Panel} from './panel.model';
 import {UserCredentials} from './user-credentials.model';
 
 @model({
@@ -28,16 +29,26 @@ export class User extends Entity {
     type: 'string',
     required: true,
   })
+  name: string;
+
+  @property({
+    type: 'string',
+    required: true,
+  })
   email: string;
 
   @property({
     type: 'string',
     nullable: false,
+    default: 'user',
   })
   role: string;
 
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;
+
+  @hasOne(() => Panel)
+  panel: Panel;
 
   constructor(data?: Partial<User>) {
     super(data);
@@ -45,7 +56,7 @@ export class User extends Entity {
 }
 
 export interface UserRelations {
-  // describe navigational properties here
+  panel?: Panel;
 }
 
 

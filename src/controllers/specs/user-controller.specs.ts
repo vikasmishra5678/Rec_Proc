@@ -8,15 +8,39 @@ export const UserProfileSchema = {
   required: ['id'],
   properties: {
     id: {type: 'string'},
-    email: {type: 'string'},
     name: {type: 'string'},
+    email: {type: 'string'},
   },
 };
 
 const CredentialsSchema: SchemaObject = {
   type: 'object',
-  required: ['email', 'password'],
+  required: ['name', 'email', 'password', 'role'],
   properties: {
+    name: {
+      type: 'string',
+    },
+    email: {
+      type: 'string',
+      format: 'email',
+    },
+    password: {
+      type: 'string',
+      minLength: 8,
+    },
+    role: {
+      type: 'string',
+    },
+  },
+};
+
+const CredentialsSchemaAdmin: SchemaObject = {
+  type: 'object',
+  required: ['name', 'email', 'password'],
+  properties: {
+    name: {
+      type: 'string',
+    },
     email: {
       type: 'string',
       format: 'email',
@@ -28,10 +52,41 @@ const CredentialsSchema: SchemaObject = {
   },
 };
 
+const CredentialsSchemaLogin: SchemaObject = {
+  type: 'object',
+  required: ['email', 'password'],
+  properties: {
+    email: {
+      type: 'string',
+      format: 'email',
+    },
+    password: {
+      type: 'string',
+      minLength: 8,
+    }
+  },
+};
+
 export const CredentialsRequestBody: RequestBodyObject = {
-  description: 'The input of login function',
+  description: 'The input of Sign-Up function',
   required: true,
   content: {
     'application/json': {schema: CredentialsSchema},
+  },
+};
+
+export const CredentialsRequestBodyAdmin: RequestBodyObject = {
+  description: 'The input of Sign-Up as Admin function',
+  required: true,
+  content: {
+    'application/json': {schema: CredentialsSchemaAdmin},
+  },
+};
+
+export const CredentialsRequestBodyLogin: RequestBodyObject = {
+  description: 'The input of login function',
+  required: true,
+  content: {
+    'application/json': {schema: CredentialsSchemaLogin},
   },
 };

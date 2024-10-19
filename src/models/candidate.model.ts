@@ -1,62 +1,61 @@
-import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {Entity, hasOne, model, property} from '@loopback/repository';
 import {CandidateStatus} from './candidate-status.model';
 
-@model({settings: {strict: false}})
+@model()
 export class Candidate extends Entity {
   @property({
-    type: 'number',
+    type: 'string',
     id: true,
     generated: true,
   })
-  C_ID?: number;
+  id?: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  candidate_name: string;
+  name: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  c_email: string;
-
-  @property({
-    type: 'number',
-    required: true,
-  })
-  c_phone: number;
-
-  @property({
-    type: 'number',
-    required: true,
-  })
-  c_experience: number;
-
-  @property({
-    type: 'array',
-    itemType: 'string',
-    required: true,
-  })
-  c_domain: string[];
+  email: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  c_location: string;
+  phone: string;
 
-  @belongsTo(() => CandidateStatus, {name: 'CandidateStatus'})
-  CS_ID: number;
-  // Define well-known properties here
+  @property({
+    type: 'string',
+    required: true,
+  })
+  experience: string;
 
-  // Indexer property to allow additional data
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  [prop: string]: any;
+  @property({
+    type: 'string',
+    required: true,
+  })
+  domain: string;
 
+  @property({
+    type: 'string',
+    required: true,
+  })
+  location: string;
+
+  @hasOne(() => CandidateStatus)
+  candidateStatus: CandidateStatus;
+
+  constructor(data?: Partial<Candidate>) {
+    super(data);
+  }
 }
 
 export interface CandidateRelations {
-  // describe navigational properties here
+  candidateStatus?: CandidateStatus;
 }
+
+export type CandidateWithRelations = Candidate & CandidateRelations;

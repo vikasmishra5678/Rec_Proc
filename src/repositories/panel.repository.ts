@@ -1,22 +1,27 @@
 import {inject, Getter} from '@loopback/core';
-import {DefaultCrudRepository, repository, HasManyRepositoryFactory} from '@loopback/repository';
+import {DefaultCrudRepository, repository, HasManyRepositoryFactory, BelongsToAccessor} from '@loopback/repository';
 import {MongoDsDataSource} from '../datasources';
-import {Panel, PanelRelations, PanelAvailability} from '../models';
-import {PanelAvailabilityRepository} from './panel-availability.repository';
+import {Panel, PanelRelations, PanelSlots, User} from '../models';
+import {PanelSlotsRepository} from './panel-slots.repository';
+import {UserRepository} from './user.repository';
 
 export class PanelRepository extends DefaultCrudRepository<
   Panel,
-  typeof Panel.prototype.P_ID,
+  typeof Panel.prototype.id,
   PanelRelations
 > {
 
-  public readonly panelAvailabilities: HasManyRepositoryFactory<PanelAvailability, typeof Panel.prototype.P_ID>;
+  public readonly panelSlots: HasManyRepositoryFactory<PanelSlots, typeof Panel.prototype.id>;
+
+  public readonly user: BelongsToAccessor<User, typeof Panel.prototype.id>;
 
   constructor(
-    @inject('datasources.MongoDS') dataSource: MongoDsDataSource, @repository.getter('PanelAvailabilityRepository') protected panelAvailabilityRepositoryGetter: Getter<PanelAvailabilityRepository>,
+    @inject('datasources.MongoDS') dataSource: MongoDsDataSource, @repository.getter('PanelSlotsRepository') protected panelSlotsRepositoryGetter: Getter<PanelSlotsRepository>, @repository.getter('UserRepository') protected userRepositoryGetter: Getter<UserRepository>,
   ) {
     super(Panel, dataSource);
-    this.panelAvailabilities = this.createHasManyRepositoryFactoryFor('panelAvailabilities', panelAvailabilityRepositoryGetter,);
-    this.registerInclusionResolver('panelAvailabilities', this.panelAvailabilities.inclusionResolver);
+    this.user = this.createBelongsToAccessorFor('user', userRepositoryGetter,);
+    this.registerInclusionResolver('user', this.user.inclusionResolver);
+    this.panelSlots = this.createHasManyRepositoryFactoryFor('panelSlots', panelSlotsRepositoryGetter,);
+    this.registerInclusionResolver('panelSlots', this.panelSlots.inclusionResolver);
   }
 }
