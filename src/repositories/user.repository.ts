@@ -1,15 +1,27 @@
-import {inject, Getter} from '@loopback/core';
-import {DefaultCrudRepository, repository, HasOneRepositoryFactory} from '@loopback/repository';
+import {Getter, inject} from '@loopback/core';
+import {DefaultCrudRepository, HasOneRepositoryFactory, repository} from '@loopback/repository';
 import {MongoDsDataSource} from '../datasources';
-import {User, UserRelations, UserCredentials, Panel} from '../models';
-import {UserCredentialsRepository} from './user-credentials.repository';
+import {Panel, User, UserCredentials, UserRelations} from '../models';
 import {PanelRepository} from './panel.repository';
+import {UserCredentialsRepository} from './user-credentials.repository';
 
 export type Credentials = {
   email: string;
   password: string;
-  role?: string
+  phone?: string;
+  role?: string;
 };
+
+export type UpdateUserDetails = {
+  name?: string;
+  email?: string;
+  phone?: string;
+  role?: string;
+}
+
+export type ChangePasswordDetails = {
+  newPassword: string;
+}
 
 export class UserRepository extends DefaultCrudRepository<
   User,

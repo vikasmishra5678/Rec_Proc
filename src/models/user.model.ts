@@ -33,16 +33,22 @@ export class User extends Entity {
 
   @property({
     type: 'string',
+    nullable: false,
+    default: 'user',
+  })
+  role: string;
+
+  @property({
+    type: 'string',
     required: true,
   })
   email: string;
 
   @property({
     type: 'string',
-    nullable: false,
-    default: 'user',
+    required: true,
   })
-  role: string;
+  phone: string;
 
   @hasOne(() => UserCredentials)
   userCredentials: UserCredentials;

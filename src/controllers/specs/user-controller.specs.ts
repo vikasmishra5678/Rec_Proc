@@ -9,15 +9,24 @@ export const UserProfileSchema = {
   properties: {
     id: {type: 'string'},
     name: {type: 'string'},
+    role: {type: 'string'},
+    phone: {type: 'string'},
     email: {type: 'string'},
+
   },
 };
 
 const CredentialsSchema: SchemaObject = {
   type: 'object',
-  required: ['name', 'email', 'password', 'role'],
+  required: ['name', 'role', 'phone', 'email', 'password'],
   properties: {
     name: {
+      type: 'string',
+    },
+    role: {
+      type: 'string',
+    },
+    phone: {
       type: 'string',
     },
     email: {
@@ -27,18 +36,18 @@ const CredentialsSchema: SchemaObject = {
     password: {
       type: 'string',
       minLength: 8,
-    },
-    role: {
-      type: 'string',
     },
   },
 };
 
 const CredentialsSchemaAdmin: SchemaObject = {
   type: 'object',
-  required: ['name', 'email', 'password'],
+  required: ['name', 'phone', 'email', 'password'],
   properties: {
     name: {
+      type: 'string',
+    },
+    phone: {
       type: 'string',
     },
     email: {
@@ -48,6 +57,27 @@ const CredentialsSchemaAdmin: SchemaObject = {
     password: {
       type: 'string',
       minLength: 8,
+    },
+
+  },
+};
+
+const UpdateUserDetailsSchema: SchemaObject = {
+  type: 'object',
+  required: ['name', 'role', 'phone', 'email'],
+  properties: {
+    name: {
+      type: 'string',
+    },
+    role: {
+      type: 'string',
+    },
+    phone: {
+      type: 'string',
+    },
+    email: {
+      type: 'string',
+      format: 'email',
     },
   },
 };
@@ -72,6 +102,14 @@ export const CredentialsRequestBody: RequestBodyObject = {
   required: true,
   content: {
     'application/json': {schema: CredentialsSchema},
+  },
+};
+
+export const UpdateUserDetailsRequest: RequestBodyObject = {
+  description: 'The input of Updating User Data',
+  required: true,
+  content: {
+    'application/json': {schema: UpdateUserDetailsSchema},
   },
 };
 
