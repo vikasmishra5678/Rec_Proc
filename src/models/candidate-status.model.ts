@@ -14,25 +14,7 @@ export class CandidateStatus extends Entity {
     type: 'string',
     required: true,
   })
-  candidate_status: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
   current_stage: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  l1_panel: string;
-
-  @property({
-    type: 'string',
-    required: true,
-  })
-  l1_date: string;
 
   @property({
     type: 'string',
@@ -42,21 +24,55 @@ export class CandidateStatus extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
-  l2_panel: string;
+  l1_panel: string;
 
   @property({
     type: 'string',
-    required: true,
   })
-  l2_date: string;
+  l1_date: string;
+
+  @property({
+    type: 'string',
+  })
+  l1_time: string;
+
+  @property({
+    type: 'string',
+  })
+  l1_feedback: string;
 
   @property({
     type: 'string',
     required: true,
   })
   l2_status: string;
+
+  @property({
+    type: 'string',
+  })
+  l2_panel: string;
+
+  @property({
+    type: 'string',
+  })
+  l2_date: string;
+
+  @property({
+    type: 'string',
+  })
+  l2_time: string;
+
+  @property({
+    type: 'string',
+  })
+  l2_feedback: string;
+
+  @property({
+    type: 'Date',
+    default: () => new Date(),
+  })
+  modified_at: Date;
 
   @belongsTo(() => Candidate)
   candidateId: string;

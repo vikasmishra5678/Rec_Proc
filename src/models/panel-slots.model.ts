@@ -28,6 +28,12 @@ export class PanelSlots extends Entity {
   })
   duration: string;
 
+  @property({
+    type: 'string',
+    required: true,
+  })
+  status: string;
+
   @belongsTo(() => Panel)
   panelId: string;
 

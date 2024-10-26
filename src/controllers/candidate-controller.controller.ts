@@ -3,7 +3,7 @@ import {
   CountSchema,
   Filter,
   repository,
-  Where
+  Where,
 } from '@loopback/repository';
 import {
   del,
@@ -44,6 +44,62 @@ export class CandidateControllerController {
     candidate: Omit<Candidate, 'id'>,
   ): Promise<Candidate> {
     return this.candidateRepository.create(candidate);
+  }
+
+  // Bulk Upload Endpoint
+  @post('/candidates/bulk-upload')
+  @response(200, {
+    description: 'Bulk upload of Candidates',
+    content: {
+      'application/json': {
+        schema: {
+          type: 'object',
+          properties: {
+            total: {type: 'number'},
+            successCount: {type: 'number'},
+            failCount: {type: 'number'},
+            failedRecords: {
+              type: 'array',
+              items: {type: 'object'},
+            },
+          },
+        }
+      }
+    },
+  })
+  async bulkUpload(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: {
+            type: 'array',
+            items: getModelSchemaRef(Candidate, {exclude: ['id']}),
+          },
+        },
+      },
+    })
+    candidates: Omit<Candidate, 'id'>[],
+  ): Promise<object> {
+    let successCount = 0;
+    let failCount = 0;
+    const failedRecords = [];
+
+    for (const candidate of candidates) {
+      try {
+        await this.candidateRepository.create(candidate);
+        successCount++;
+      } catch (error) {
+        failCount++;
+        failedRecords.push({candidate, reason: error.message});
+      }
+    }
+
+    return {
+      total: candidates.length,
+      successCount,
+      failCount,
+      failedRecords,
+    };
   }
 
   @get('/candidates/count')
@@ -91,6 +147,7 @@ export class CandidateControllerController {
     candidate: Candidate,
     @param.where(Candidate) where?: Where<Candidate>,
   ): Promise<Count> {
+    candidate.modified_at = new Date();
     return this.candidateRepository.updateAll(candidate, where);
   }
 
@@ -124,6 +181,7 @@ export class CandidateControllerController {
     })
     candidate: Candidate,
   ): Promise<void> {
+    candidate.modified_at = new Date();
     await this.candidateRepository.updateById(id, candidate);
   }
 

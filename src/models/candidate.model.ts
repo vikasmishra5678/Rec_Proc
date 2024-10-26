@@ -32,19 +32,39 @@ export class Candidate extends Entity {
     type: 'string',
     required: true,
   })
-  experience: string;
+  totalExperience: string;
 
   @property({
     type: 'string',
     required: true,
   })
-  domain: string;
+  relevantExperience: string;
+
+  @property({
+    type: 'array',
+    itemType: 'string',
+    required: true,
+  })
+  domain: string[];
 
   @property({
     type: 'string',
     required: true,
   })
   location: string;
+
+
+  @property({
+    type: 'string',
+    default: 'waiting',
+  })
+  candidate_status: string;
+
+  @property({
+    type: 'Date',
+    default: () => new Date(),
+  })
+  modified_at: Date;
 
   @hasOne(() => CandidateStatus)
   candidateStatus: CandidateStatus;
