@@ -164,10 +164,6 @@ export class UserController {
     },
   })
   @authenticate('jwt')
-  @authorize({
-    allowedRoles: ['admin'],  // Adjust roles as necessary
-    voters: [basicAuthorization],
-  })
   async get(
     @param.query.object('filter') filter?: Filter<User>,
   ): Promise<User[]> {

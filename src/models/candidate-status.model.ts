@@ -12,13 +12,11 @@ export class CandidateStatus extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
   current_stage: string;
 
   @property({
     type: 'string',
-    required: true,
   })
   l1_status: string;
 
@@ -44,7 +42,6 @@ export class CandidateStatus extends Entity {
 
   @property({
     type: 'string',
-    required: true,
   })
   l2_status: string;
 

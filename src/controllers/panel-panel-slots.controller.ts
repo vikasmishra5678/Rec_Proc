@@ -19,13 +19,15 @@ import {
   Panel,
   PanelSlots,
 } from '../models';
-import {PanelRepository} from '../repositories';
+import {PanelRepository, PanelSlotsRepository} from '../repositories';
 
 export class PanelPanelSlotsController {
   constructor(
     @repository(PanelRepository) protected panelRepository: PanelRepository,
+    @repository(PanelSlotsRepository) protected panelSlotsRepository: PanelSlotsRepository,
   ) { }
 
+  // Existing individual Panel's PanelSlots endpoints
   @get('/panels/{id}/panel-slots', {
     responses: {
       '200': {
@@ -123,4 +125,81 @@ export class PanelPanelSlotsController {
     await this.panelRepository.panelSlots(panelId).delete({id: slotId});
   }
 
+  // New endpoints for all PanelSlots across all Panels
+  @get('/panel-slots', {
+    responses: {
+      '200': {
+        description: 'Array of all PanelSlots',
+        content: {
+          'application/json': {
+            schema: {type: 'array', items: getModelSchemaRef(PanelSlots)},
+          },
+        },
+      },
+    },
+  })
+  async findAll(
+    @param.query.object('filter') filter?: Filter<PanelSlots>,
+  ): Promise<PanelSlots[]> {
+    return this.panelSlotsRepository.find(filter);
+  }
+
+  @post('/panel-slots', {
+    responses: {
+      '200': {
+        description: 'PanelSlots model instance',
+        content: {'application/json': {schema: getModelSchemaRef(PanelSlots)}},
+      },
+    },
+  })
+  async createAll(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(PanelSlots, {
+            title: 'NewPanelSlots',
+            exclude: ['id'],
+          }),
+        },
+      },
+    }) panelSlots: Omit<PanelSlots, 'id'>,
+  ): Promise<PanelSlots> {
+    return this.panelSlotsRepository.create(panelSlots);
+  }
+
+  @patch('/panel-slots', {
+    responses: {
+      '200': {
+        description: 'PanelSlots PATCH success count',
+        content: {'application/json': {schema: CountSchema}},
+      },
+    },
+  })
+  async patchAll(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(PanelSlots, {partial: true}),
+        },
+      },
+    })
+    panelSlots: Partial<PanelSlots>,
+    @param.query.object('where', getWhereSchemaFor(PanelSlots)) where?: Where<PanelSlots>,
+  ): Promise<Count> {
+    return this.panelSlotsRepository.updateAll(panelSlots, where);
+  }
+
+  @del('/panel-slots', {
+    responses: {
+      '200': {
+        description: 'PanelSlots DELETE success count',
+        content: {'application/json': {schema: CountSchema}},
+      },
+    },
+  })
+  async deleteAll(
+    @param.query.object('where', getWhereSchemaFor(PanelSlots)) where?: Where<PanelSlots>,
+  ): Promise<Count> {
+    return this.panelSlotsRepository.deleteAll(where);
+  }
 }
