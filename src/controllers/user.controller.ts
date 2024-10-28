@@ -138,10 +138,6 @@ export class UserController {
     },
   })
   @authenticate('jwt')
-  @authorize({
-    allowedRoles: ['admin'],
-    voters: [basicAuthorization],
-  })
   async findById(@param.path.string('userId') userId: string): Promise<User> {
     return this.userRepository.findById(userId);
   }
@@ -241,10 +237,6 @@ export class UserController {
     },
   })
   @authenticate('jwt')
-  @authorize({
-    allowedRoles: ['admin', 'user'],
-    voters: [basicAuthorization],
-  })
   async updateUserDetails(
     @param.path.string('userId') userId: string,
     @requestBody(UpdateUserDetailsRequest)

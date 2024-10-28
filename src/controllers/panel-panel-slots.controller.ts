@@ -202,4 +202,45 @@ export class PanelPanelSlotsController {
   ): Promise<Count> {
     return this.panelSlotsRepository.deleteAll(where);
   }
+
+  // New endpoints for individual PanelSlot by slotId
+  @get('/panel-slots/{slotId}', {
+    responses: {
+      '200': {
+        description: 'PanelSlots model instance',
+        content: {
+          'application/json': {
+            schema: getModelSchemaRef(PanelSlots),
+          },
+        },
+      },
+    },
+  })
+  async findById(
+    @param.path.string('slotId') slotId: string,
+  ): Promise<PanelSlots> {
+    return this.panelSlotsRepository.findById(slotId);
+  }
+
+  @patch('/panel-slots/{slotId}', {
+    responses: {
+      '200': {
+        description: 'PanelSlots PATCH success count',
+        content: {'application/json': {schema: CountSchema}},
+      },
+    },
+  })
+  async patchById(
+    @param.path.string('slotId') slotId: string,
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(PanelSlots, {partial: true}),
+        },
+      },
+    })
+    panelSlots: Partial<PanelSlots>,
+  ): Promise<void> {
+    await this.panelSlotsRepository.updateById(slotId, panelSlots);
+  }
 }
