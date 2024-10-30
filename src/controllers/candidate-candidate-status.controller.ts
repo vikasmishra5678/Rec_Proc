@@ -19,11 +19,12 @@ import {
   Candidate,
   CandidateStatus,
 } from '../models';
-import {CandidateRepository} from '../repositories';
+import {CandidateRepository, CandidateStatusRepository} from '../repositories';
 
 export class CandidateCandidateStatusController {
   constructor(
     @repository(CandidateRepository) protected candidateRepository: CandidateRepository,
+    @repository(CandidateStatusRepository) protected candidateStatusRepository: CandidateStatusRepository,
   ) { }
 
   @get('/candidates/{id}/candidate-status', {
@@ -106,5 +107,87 @@ export class CandidateCandidateStatusController {
     @param.query.object('where', getWhereSchemaFor(CandidateStatus)) where?: Where<CandidateStatus>,
   ): Promise<Count> {
     return this.candidateRepository.candidateStatus(id).delete(where);
+  }
+
+  // New endpoints to manage all candidate statuses
+
+  @get('/candidate-statuses', {
+    responses: {
+      '200': {
+        description: 'Array of CandidateStatus model instances',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: getModelSchemaRef(CandidateStatus, {includeRelations: true}),
+            },
+          },
+        },
+      },
+    },
+  })
+  async find(
+    @param.query.object('filter') filter?: Filter<CandidateStatus>,
+  ): Promise<CandidateStatus[]> {
+    return this.candidateStatusRepository.find(filter);
+  }
+
+  @post('/candidate-statuses', {
+    responses: {
+      '200': {
+        description: 'CandidateStatus model instance',
+        content: {'application/json': {schema: getModelSchemaRef(CandidateStatus)}},
+      },
+    },
+  })
+  async createAll(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(CandidateStatus, {
+            title: 'NewCandidateStatus',
+            exclude: ['id'],
+          }),
+        },
+      },
+    }) candidateStatus: Omit<CandidateStatus, 'id'>,
+  ): Promise<CandidateStatus> {
+    return this.candidateStatusRepository.create(candidateStatus);
+  }
+
+  @patch('/candidate-statuses', {
+    responses: {
+      '200': {
+        description: 'CandidateStatus PATCH success count',
+        content: {'application/json': {schema: CountSchema}},
+      },
+    },
+  })
+  async patchAll(
+    @requestBody({
+      content: {
+        'application/json': {
+          schema: getModelSchemaRef(CandidateStatus, {partial: true}),
+        },
+      },
+    })
+    candidateStatus: Partial<CandidateStatus>,
+    @param.query.object('where', getWhereSchemaFor(CandidateStatus)) where?: Where<CandidateStatus>,
+  ): Promise<Count> {
+    return this.candidateStatusRepository.updateAll(candidateStatus, where);
+  }
+
+  @del('/candidate-statuses', {
+    responses: {
+      '200': {
+        description: 'CandidateStatus DELETE success count',
+        content: {'application/json': {schema: CountSchema}},
+      },
+    },
+  })
+  async deleteAll(
+    @param.query.object('where', getWhereSchemaFor(CandidateStatus)) where?: Where<CandidateStatus>,
+  ): Promise<Count> {
+    return this.candidateStatusRepository.deleteAll(where);
   }
 }
