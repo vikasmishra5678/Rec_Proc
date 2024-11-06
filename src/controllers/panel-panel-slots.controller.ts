@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -40,6 +41,7 @@ export class PanelPanelSlotsController {
       },
     },
   })
+  @authenticate('jwt')
   async find(
     @param.path.string('id') id: string,
     @param.query.object('filter') filter?: Filter<PanelSlots>,
@@ -55,6 +57,7 @@ export class PanelPanelSlotsController {
       },
     },
   })
+  @authenticate('jwt')
   async create(
     @param.path.string('id') id: typeof Panel.prototype.id,
     @requestBody({
@@ -80,6 +83,7 @@ export class PanelPanelSlotsController {
       },
     },
   })
+  @authenticate('jwt')
   async patch(
     @param.path.string('id') id: string,
     @requestBody({
@@ -103,6 +107,7 @@ export class PanelPanelSlotsController {
       },
     },
   })
+  @authenticate('jwt')
   async delete(
     @param.path.string('id') id: string,
     @param.query.object('where', getWhereSchemaFor(PanelSlots)) where?: Where<PanelSlots>,
@@ -118,6 +123,7 @@ export class PanelPanelSlotsController {
       },
     },
   })
+  @authenticate('jwt')
   async deleteById(
     @param.path.string('panelId') panelId: string,
     @param.path.string('slotId') slotId: string,
@@ -138,6 +144,7 @@ export class PanelPanelSlotsController {
       },
     },
   })
+  @authenticate('jwt')
   async findAll(
     @param.query.object('filter') filter?: Filter<PanelSlots>,
   ): Promise<PanelSlots[]> {
@@ -152,6 +159,7 @@ export class PanelPanelSlotsController {
       },
     },
   })
+  @authenticate('jwt')
   async createAll(
     @requestBody({
       content: {
@@ -175,6 +183,7 @@ export class PanelPanelSlotsController {
       },
     },
   })
+  @authenticate('jwt')
   async patchAll(
     @requestBody({
       content: {
@@ -197,6 +206,7 @@ export class PanelPanelSlotsController {
       },
     },
   })
+  @authenticate('jwt')
   async deleteAll(
     @param.query.object('where', getWhereSchemaFor(PanelSlots)) where?: Where<PanelSlots>,
   ): Promise<Count> {
@@ -216,6 +226,7 @@ export class PanelPanelSlotsController {
       },
     },
   })
+  @authenticate('jwt')
   async findById(
     @param.path.string('slotId') slotId: string,
   ): Promise<PanelSlots> {
@@ -230,6 +241,7 @@ export class PanelPanelSlotsController {
       },
     },
   })
+  @authenticate('jwt')
   async patchById(
     @param.path.string('slotId') slotId: string,
     @requestBody({

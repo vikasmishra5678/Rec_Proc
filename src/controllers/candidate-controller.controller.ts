@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -30,6 +31,7 @@ export class CandidateControllerController {
     description: 'Candidate model instance',
     content: {'application/json': {schema: getModelSchemaRef(Candidate)}},
   })
+  @authenticate('jwt')
   async create(
     @requestBody({
       content: {
@@ -67,6 +69,7 @@ export class CandidateControllerController {
       }
     },
   })
+  @authenticate('jwt')
   async bulkUpload(
     @requestBody({
       content: {
@@ -107,6 +110,7 @@ export class CandidateControllerController {
     description: 'Candidate model count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authenticate('jwt')
   async count(
     @param.where(Candidate) where?: Where<Candidate>,
   ): Promise<Count> {
@@ -125,6 +129,7 @@ export class CandidateControllerController {
       },
     },
   })
+  @authenticate('jwt')
   async find(
     @param.query.object('filter') filter?: Filter<Candidate>,
   ): Promise<Candidate[]> {
@@ -136,6 +141,7 @@ export class CandidateControllerController {
     description: 'Candidate PATCH success count',
     content: {'application/json': {schema: CountSchema}},
   })
+  @authenticate('jwt')
   async updateAll(
     @requestBody({
       content: {
@@ -160,6 +166,7 @@ export class CandidateControllerController {
       },
     },
   })
+  @authenticate('jwt')
   async findById(
     @param.path.string('id') id: string,
   ): Promise<Candidate> {
@@ -170,6 +177,7 @@ export class CandidateControllerController {
   @response(204, {
     description: 'Candidate PATCH success',
   })
+  @authenticate('jwt')
   async updateById(
     @param.path.string('id') id: string,
     @requestBody({
@@ -189,6 +197,7 @@ export class CandidateControllerController {
   @response(204, {
     description: 'Candidate PUT success',
   })
+  @authenticate('jwt')
   async replaceById(
     @param.path.string('id') id: string,
     @requestBody() candidate: Candidate,
@@ -200,6 +209,7 @@ export class CandidateControllerController {
   @response(204, {
     description: 'Candidate DELETE success',
   })
+  @authenticate('jwt')
   async deleteById(@param.path.string('id') id: string): Promise<void> {
     await this.candidateRepository.deleteById(id);
   }

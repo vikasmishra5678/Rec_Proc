@@ -1,14 +1,15 @@
+import {authenticate} from '@loopback/authentication';
 import {
   repository,
 } from '@loopback/repository';
 import {
-  param,
   get,
   getModelSchemaRef,
+  param,
 } from '@loopback/rest';
 import {
-  PanelSlots,
   Panel,
+  PanelSlots,
 } from '../models';
 import {PanelSlotsRepository} from '../repositories';
 
@@ -30,6 +31,7 @@ export class PanelSlotsPanelController {
       },
     },
   })
+  @authenticate('jwt')
   async getPanel(
     @param.path.string('id') id: typeof PanelSlots.prototype.id,
   ): Promise<Panel> {

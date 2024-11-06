@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -39,6 +40,7 @@ export class CandidateCandidateStatusController {
       },
     },
   })
+  @authenticate('jwt')
   async get(
     @param.path.string('id') id: string,
     @param.query.object('filter') filter?: Filter<CandidateStatus>,
@@ -54,6 +56,7 @@ export class CandidateCandidateStatusController {
       },
     },
   })
+  @authenticate('jwt')
   async create(
     @param.path.string('id') id: typeof Candidate.prototype.id,
     @requestBody({
@@ -79,6 +82,7 @@ export class CandidateCandidateStatusController {
       },
     },
   })
+  @authenticate('jwt')
   async patch(
     @param.path.string('id') id: string,
     @requestBody({
@@ -102,6 +106,7 @@ export class CandidateCandidateStatusController {
       },
     },
   })
+  @authenticate('jwt')
   async delete(
     @param.path.string('id') id: string,
     @param.query.object('where', getWhereSchemaFor(CandidateStatus)) where?: Where<CandidateStatus>,
@@ -126,6 +131,7 @@ export class CandidateCandidateStatusController {
       },
     },
   })
+  @authenticate('jwt')
   async find(
     @param.query.object('filter') filter?: Filter<CandidateStatus>,
   ): Promise<CandidateStatus[]> {
@@ -140,6 +146,7 @@ export class CandidateCandidateStatusController {
       },
     },
   })
+  @authenticate('jwt')
   async createAll(
     @requestBody({
       content: {
@@ -163,6 +170,7 @@ export class CandidateCandidateStatusController {
       },
     },
   })
+  @authenticate('jwt')
   async patchAll(
     @requestBody({
       content: {
@@ -185,6 +193,7 @@ export class CandidateCandidateStatusController {
       },
     },
   })
+  @authenticate('jwt')
   async deleteAll(
     @param.query.object('where', getWhereSchemaFor(CandidateStatus)) where?: Where<CandidateStatus>,
   ): Promise<Count> {

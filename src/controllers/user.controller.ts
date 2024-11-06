@@ -1,5 +1,4 @@
 import {TokenService, UserService, authenticate} from '@loopback/authentication';
-import {authorize} from '@loopback/authorization';
 import {inject} from '@loopback/core';
 import {Filter, model, property, repository} from '@loopback/repository';
 import {HttpErrors, del, get, param, patch, post, requestBody} from '@loopback/rest';
@@ -11,7 +10,6 @@ import {CredentialsRequestBody, CredentialsRequestBodyAdmin, CredentialsRequestB
 
 import _ from 'lodash';
 import {PasswordHasherBindings, TokenServiceBindings, UserServiceBindings} from '../keys';
-import {basicAuthorization} from '../middlewares/auth.midd';
 
 @model()
 export class NewUserRequest extends User {
@@ -49,10 +47,6 @@ export class UserController {
     },
   })
   @authenticate('jwt')
-  @authorize({
-    allowedRoles: ['admin'],
-    voters: [basicAuthorization],
-  })
   async create(
     @requestBody(CredentialsRequestBody)
     newUserRequest: Credentials,
@@ -283,10 +277,6 @@ export class UserController {
     },
   })
   @authenticate('jwt')
-  @authorize({
-    allowedRoles: ['admin'],
-    voters: [basicAuthorization],
-  })
   async changePassword(
     @param.path.string('userId') userId: string,
     @requestBody({
@@ -325,10 +315,6 @@ export class UserController {
     },
   })
   @authenticate('jwt')
-  @authorize({
-    allowedRoles: ['admin'],
-    voters: [basicAuthorization],
-  })
   async deleteUser(
     @param.path.string('userId') userId: string,
   ): Promise<void> {

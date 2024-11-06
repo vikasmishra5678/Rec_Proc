@@ -1,14 +1,15 @@
+import {authenticate} from '@loopback/authentication';
 import {
   repository,
 } from '@loopback/repository';
 import {
-  param,
   get,
   getModelSchemaRef,
+  param,
 } from '@loopback/rest';
 import {
-  CandidateStatus,
   Candidate,
+  CandidateStatus,
 } from '../models';
 import {CandidateStatusRepository} from '../repositories';
 
@@ -30,6 +31,7 @@ export class CandidateStatusCandidateController {
       },
     },
   })
+  @authenticate('jwt')
   async getCandidate(
     @param.path.string('id') id: typeof CandidateStatus.prototype.id,
   ): Promise<Candidate> {

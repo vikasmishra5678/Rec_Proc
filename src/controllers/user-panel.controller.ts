@@ -1,3 +1,4 @@
+import {authenticate} from '@loopback/authentication';
 import {
   Count,
   CountSchema,
@@ -16,8 +17,8 @@ import {
   requestBody,
 } from '@loopback/rest';
 import {
-  User,
   Panel,
+  User,
 } from '../models';
 import {UserRepository} from '../repositories';
 
@@ -38,6 +39,7 @@ export class UserPanelController {
       },
     },
   })
+  @authenticate('jwt')
   async get(
     @param.path.string('id') id: string,
     @param.query.object('filter') filter?: Filter<Panel>,
@@ -53,6 +55,7 @@ export class UserPanelController {
       },
     },
   })
+  @authenticate('jwt')
   async create(
     @param.path.string('id') id: typeof User.prototype.id,
     @requestBody({
@@ -78,6 +81,7 @@ export class UserPanelController {
       },
     },
   })
+  @authenticate('jwt')
   async patch(
     @param.path.string('id') id: string,
     @requestBody({
@@ -101,6 +105,7 @@ export class UserPanelController {
       },
     },
   })
+  @authenticate('jwt')
   async delete(
     @param.path.string('id') id: string,
     @param.query.object('where', getWhereSchemaFor(Panel)) where?: Where<Panel>,

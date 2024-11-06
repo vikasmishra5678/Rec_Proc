@@ -1,10 +1,11 @@
+import {authenticate} from '@loopback/authentication';
 import {
   repository,
 } from '@loopback/repository';
 import {
-  param,
   get,
   getModelSchemaRef,
+  param,
 } from '@loopback/rest';
 import {
   Panel,
@@ -30,6 +31,7 @@ export class PanelUserController {
       },
     },
   })
+  @authenticate('jwt')
   async getUser(
     @param.path.string('id') id: typeof Panel.prototype.id,
   ): Promise<User> {
