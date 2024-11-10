@@ -95,6 +95,7 @@ export class CandidateCandidateStatusController {
     candidateStatus: Partial<CandidateStatus>,
     @param.query.object('where', getWhereSchemaFor(CandidateStatus)) where?: Where<CandidateStatus>,
   ): Promise<Count> {
+    candidateStatus.modified_at = new Date();
     return this.candidateRepository.candidateStatus(id).patch(candidateStatus, where);
   }
 
@@ -182,6 +183,7 @@ export class CandidateCandidateStatusController {
     candidateStatus: Partial<CandidateStatus>,
     @param.query.object('where', getWhereSchemaFor(CandidateStatus)) where?: Where<CandidateStatus>,
   ): Promise<Count> {
+    candidateStatus.modified_at = new Date();
     return this.candidateStatusRepository.updateAll(candidateStatus, where);
   }
 

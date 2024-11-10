@@ -202,6 +202,7 @@ export class CandidateControllerController {
     @param.path.string('id') id: string,
     @requestBody() candidate: Candidate,
   ): Promise<void> {
+    candidate.modified_at = new Date();
     await this.candidateRepository.replaceById(id, candidate);
   }
 
